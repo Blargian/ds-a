@@ -1,6 +1,7 @@
 # Data Structures & Algorithms
 
-This repository stores code written as part of the coursera course 'Data Structures and Algorithms'. 
+This repository contains code for the solutions to programming challenges in the the coursera specialization 'Data Structures and Algorithms'. 
+Currently only `.cpp` solutions are solved, `.py` files are just template solutions. 
 
 <table>
 <thead>
@@ -20,3 +21,4 @@ This repository stores code written as part of the coursera course 'Data Structu
   </tr>
 </tbody>
 </table>
+
