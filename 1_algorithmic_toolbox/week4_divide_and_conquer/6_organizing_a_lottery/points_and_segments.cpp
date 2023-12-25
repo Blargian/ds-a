@@ -27,7 +27,7 @@ vector<int> fast_count_segments(vector<int> starts, vector<int> ends, vector<int
   };
 
   std::sort(segments.begin(), segments.end(), [](std::pair<int,int> a, std::pair<int,int> b){ return a.first < b.first;});
-  std::sort(points.begin(), points.end());
+  //std::sort(points.begin(), points.end());
 
   auto p_it = points.begin();
   for (p_it; p_it < points.end(); ++p_it) {
@@ -36,10 +36,12 @@ vector<int> fast_count_segments(vector<int> starts, vector<int> ends, vector<int
     for (seg_it ; seg_it < segments.end() ; ++seg_it){
       if (seg_it->first <= *p_it && *p_it <= seg_it->second ){
         count++;
-	cnt[std::distance(p_it,points.begin())] = count;
-      } else {      
-        segments.erase(segments.begin(),seg_it-1);
-        break;
+	      cnt[std::distance(points.begin(),p_it)] = count;
+      } else {
+        if(count>0) {
+          segments.erase(segments.begin(),seg_it-1);
+          break;
+        }      
       }
     }
   }
