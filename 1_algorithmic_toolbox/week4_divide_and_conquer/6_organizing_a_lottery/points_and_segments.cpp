@@ -34,7 +34,7 @@ vector<int> fast_count_segments(vector<int> starts, vector<int> ends, vector<int
     int count = 0;
     auto seg_it = segments.begin();
     for (seg_it ; seg_it < segments.end() ; ++seg_it){
-      if (seg_it->first <= *p_it && *p_it <= seg_it->second ){
+      if ((seg_it->first <= *p_it && *p_it <= seg_it->second) || (seg_it->first == *p_it) || (seg_it->second == *p_it)){
         count++;
 	      cnt[std::distance(points.begin(),p_it)] = count;
       } else {
@@ -66,3 +66,14 @@ int main() {
     std::cout << cnt[i] << ' ';
   }
 }
+
+// This edge case causes the algorithm to return an incorrect result
+// edge case:
+
+// 3 3
+// 1 1
+// -2 5
+// 3 5
+// 3 5 -2
+
+// should give: 2 2 1
