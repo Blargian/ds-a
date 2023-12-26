@@ -103,13 +103,7 @@ vector<int> fast_count_segments(vector<int> starts, vector<int> ends, vector<int
   std::sort(elements.begin(),elements.end(),[](Element a, Element b)
   {
     if (a.value == b.value) {
-      if (a.type_of_point==end && b.type_of_point==point) {
-        return false;
-      } else if (a.type_of_point==point && b.type_of_point==end) {
-        return true;
-      } else {
-        return a.value < b.value;
-      }
+      return static_cast<int>(a.type_of_point) < static_cast<int>(b.type_of_point); // return according to ordering of enum point_type
     } else {
       return a.value < b.value;
     }   
@@ -122,11 +116,26 @@ vector<int> fast_count_segments(vector<int> starts, vector<int> ends, vector<int
     } else if (el_it->type_of_point == end) {
       count--;
     } else if (el_it->type_of_point == point) {
-      auto index = std::distance(points.begin(),std::find(points.begin(),points.end(),el_it->value));
-      cnt[index] = count;
+
+      auto it = std::unique(points.begin(), points.end());
+      bool wasUnique = (it == points.end());
+
+      if(wasUnique) {
+        auto index = std::distance(points.begin(),std::find(points.begin(),points.end(),el_it->value));
+        cnt[index] = count;
+      } else {
+      // taking into account that points can have duplicates 
+      it = points.begin();
+      while(it!=points.end()) {
+        it = std::find(it,points.end(),el_it->value);
+        auto index = std::distance(points.begin(),it);
+        if(it!=points.end())
+          cnt[index] = count;
+          it++;
+      }
+    }
     }
   }
-
   return cnt;
 }
 
