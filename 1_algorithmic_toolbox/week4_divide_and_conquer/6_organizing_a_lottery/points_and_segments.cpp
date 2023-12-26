@@ -16,7 +16,19 @@ vector<int> naive_count_segments(vector<int> starts, vector<int> ends, vector<in
   return cnt;
 }
 
-vector<int> fast_count_segments(vector<int> starts, vector<int> ends, vector<int> points) {
+// This was my original attempt, however
+// the edge case below causes the algorithm 
+// to return an incorrect result
+
+// 3 3
+// 1 1
+// -2 5
+// 3 5
+// 3 5 -2
+
+// should give: 2 2 1
+
+vector<int> fast_count_segments_flawed(vector<int> starts, vector<int> ends, vector<int> points) {
   
   vector<int> cnt(points.size(),0);
   vector<std::pair<int,int>> segments; 
@@ -27,7 +39,6 @@ vector<int> fast_count_segments(vector<int> starts, vector<int> ends, vector<int
   };
 
   std::sort(segments.begin(), segments.end(), [](std::pair<int,int> a, std::pair<int,int> b){ return a.first < b.first;});
-  //std::sort(points.begin(), points.end());
 
   auto p_it = points.begin();
   for (p_it; p_it < points.end(); ++p_it) {
@@ -45,6 +56,77 @@ vector<int> fast_count_segments(vector<int> starts, vector<int> ends, vector<int
       }
     }
   }
+  return cnt;
+}
+
+typedef enum point_type {
+  start,
+  point,
+  end,
+} point_type;
+
+typedef struct Element {
+  Element(int v, point_type p) : value(v), type_of_point(p) {};
+  int value;
+  point_type type_of_point;
+} Element;
+
+vector<int> fast_count_segments(vector<int> starts, vector<int> ends, vector<int> points) {
+  
+  assert(starts.size() == ends.size());
+
+  vector<int> cnt(points.size(),0);
+  vector<std::pair<int,int>> segments; 
+  
+  // utility vector which combines starts and ends into segments
+  for(auto i = starts.begin(); i < starts.end(); i++) {
+    auto index = std::distance(starts.begin(),i);
+    segments.push_back(std::make_pair(starts[index],ends[index]));  
+  };
+
+  // sort segments and points in ascending order
+  std::sort( segments.begin(), segments.end(), [](std::pair<int,int> a, std::pair<int,int> b ){ return a.first < b.first; });
+  vector<int> points_ordered;
+  std::copy( points.begin(), points.end(), std::back_inserter(points_ordered) );
+
+  // add everything into one array 
+  vector<Element> elements;
+  for( auto seg_it = segments.begin(); seg_it < segments.end(); ++seg_it ) {
+    elements.push_back(Element(seg_it->first,start));
+    elements.push_back(Element(seg_it->second,end));
+  }  
+  for( auto p_it = points_ordered.begin(); p_it < points_ordered.end(); ++p_it ) {
+    elements.push_back(Element(*p_it,point));
+  }
+
+  // sort elements such that if an end and a point are equal, point should be first
+  std::sort(elements.begin(),elements.end(),[](Element a, Element b)
+  {
+    if (a.value == b.value) {
+      if (a.type_of_point==end && b.type_of_point==point) {
+        return false;
+      } else if (a.type_of_point==point && b.type_of_point==end) {
+        return true;
+      } else {
+        return a.value < b.value;
+      }
+    } else {
+      return a.value < b.value;
+    }   
+  });
+
+  int count = 0;
+  for ( auto el_it = elements.begin(); el_it != elements.end(); ++el_it ) {
+    if (el_it->type_of_point == start) {
+      count++;
+    } else if (el_it->type_of_point == end) {
+      count--;
+    } else if (el_it->type_of_point == point) {
+      auto index = std::distance(points.begin(),std::find(points.begin(),points.end(),el_it->value));
+      cnt[index] = count;
+    }
+  }
+
   return cnt;
 }
 
@@ -67,13 +149,3 @@ int main() {
   }
 }
 
-// This edge case causes the algorithm to return an incorrect result
-// edge case:
-
-// 3 3
-// 1 1
-// -2 5
-// 3 5
-// 3 5 -2
-
-// should give: 2 2 1
