@@ -15,6 +15,8 @@ Currently only `.cpp` solutions are solved, `.py` files are just template soluti
     <td> <a href = "1_algorithmic_toolbox/algorithmic_toolbox_index.md">Algorithmic Toolbox</td>
     <td>covers basic algorithmic techniques and ideas for computational problems arising frequently in practical applications: sorting and searching, divide and conquer, greedy algorithms, dynamic programming</td>
   </tr>
+    <td> <a href = "">Algorithmic Toolbox</td>
+    <td>covers common data structures that are used in various computational problems. </td>
   <tr>
     <td></td>
     <td></td>
