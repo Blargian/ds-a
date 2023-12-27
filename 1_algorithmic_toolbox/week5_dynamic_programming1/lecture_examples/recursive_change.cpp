@@ -73,7 +73,7 @@ int main() {
   // comment the code above and uncomment below if you want to try out a single implementation
   
   //int min_coins = GreedyChange(money,denominations);
-  //int min_coins = RecursiveChange(money,denominations);
-  //std::cout << "minimum number of coins: " << min_coins;
+  int min_coins = RecursiveChange(money,denominations);
+  std::cout << "minimum number of coins: " << min_coins;
   return 0;
 }
