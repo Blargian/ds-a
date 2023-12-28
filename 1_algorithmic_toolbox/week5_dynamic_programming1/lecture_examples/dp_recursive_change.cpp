@@ -5,11 +5,11 @@
 
 int DpRecursive(const int money, const std::vector<int> denominations) {
   std::vector<int> MinNumCoins(money); 
-  for (int m=0; m<money; m++) {
+  for (int m=1; m < money+1; m++) {
     MinNumCoins[m] = std::numeric_limits<int>::max();
     for (int i=0; i < denominations.size(); i++) {
       if (m >= denominations[i]) {
-        int NumCoins = MinNumCoins[money-denominations[i]] + 1;
+        int NumCoins = MinNumCoins[m-denominations[i]] + 1;
 	if (NumCoins < MinNumCoins[m]) {
 	  MinNumCoins[m] = NumCoins;
 	}
