@@ -4,8 +4,8 @@
 #include <limits>
 
 int DpRecursive(const int money, const std::vector<int> denominations) {
-  std::vector<int> MinNumCoins(money); 
-  for (int m=1; m < money+1; m++) {
+  std::vector<int> MinNumCoins(money+1); 
+  for (int m=1; m<=money; m++) {
     MinNumCoins[m] = std::numeric_limits<int>::max();
     for (int i=0; i < denominations.size(); i++) {
       if (m >= denominations[i]) {
@@ -16,7 +16,7 @@ int DpRecursive(const int money, const std::vector<int> denominations) {
       }
     }
   }
-  return MinNumCoins[money]; 
+  return MinNumCoins.back(); 
 }
 
 int main() {
